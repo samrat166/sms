@@ -3,9 +3,7 @@ import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import Header from "./common/navbar";
-import Gallery from "./components/gallery";
 import Home from "./components/Home";
-import CustomerRegister from "./components/register/CustomerRegister";
 import Notice from "./components/notice/Notice";
 import Dashboard from "./components/dashboard/Dashboard";
 import Login from "./components/Login";
@@ -18,6 +16,7 @@ function App() {
       <div className="p-2">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="notice" element={<Notice />} />
           <Route path="login" element={<Login />} />
           <Route path="dashboard" element={<Dashboard />} />

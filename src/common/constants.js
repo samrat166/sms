@@ -57,7 +57,7 @@ export const studentsField = [
   },
 
   {
-    name: "rollno",
+    name: "rollNo",
     label: "Roll No",
     type: "text",
   },
@@ -73,7 +73,7 @@ export const studentsField = [
     type: "text",
   },
   {
-    name: "phoneNumber",
+    name: "phone",
     label: "Phone Number",
     type: "text",
   },
@@ -93,8 +93,8 @@ export const attendanceField = [
     type: "text",
   },
   {
-    name: "name",
-    label: "Name",
+    name: "studentName",
+    label: "Student Name",
     type: "text",
   },
   {
@@ -105,7 +105,7 @@ export const attendanceField = [
   {
     name: "isPresent",
     label: "Absent/Present",
-    type: "text",
+    type: "boolean",
   },
 ];
 

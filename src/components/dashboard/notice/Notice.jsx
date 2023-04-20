@@ -17,10 +17,7 @@ const Notice = () => {
     const data = { ...detail };
     console.log(data);
     try {
-      const res = await axios.post(
-        `https://vast-rose-bluefish-coat.cyclic.app/customer/`,
-        data
-      );
+      const res = await axios.post(`http://localhost:5000/api/v1/notice`, data);
       getData();
     } catch (error) {
       console.log(error);
@@ -29,18 +26,16 @@ const Notice = () => {
 
   const getData = async () => {
     try {
-      const res = await axios.get(
-        `https://vast-rose-bluefish-coat.cyclic.app/customer`
-      );
-      setNotices(res.data);
+      const res = await axios.get(`http://localhost:5000/api/v1/notices`);
+      setNotices(res.data.message);
     } catch (error) {
       console.log(error);
     }
   };
   const handleEdit = async (data) => {
     try {
-      const res = await axios.patch(
-        `https://vast-rose-bluefish-coat.cyclic.app/customer/${data._id}`,
+      const res = await axios.put(
+        `http://localhost:5000/api/v1/update/notice/${data._id}`,
         data
       );
 
@@ -52,14 +47,14 @@ const Notice = () => {
   useEffect(() => {
     getData();
   }, []);
-  const handleDeleteNotice = async (detail) => {
+  const handleDeleteNotice = async (data) => {
     try {
       const res = await axios.delete(
-        `https://vast-rose-bluefish-coat.cyclic.app/customer/${detail._id}`
+        `http://localhost:5000/api/v1/delete/notice/${data._id}`,
+        data
       );
-      console.log(res, "sadsdasadasdasdasdasd");
 
-      setNotices(notices.filter((x) => x._id !== detail._id));
+      setNotices(notices.filter((x) => x._id !== data._id));
     } catch (error) {
       console.log(error);
     }

@@ -14,7 +14,7 @@ const Teacher = () => {
     console.log(data);
     try {
       const res = await axios.post(
-        `https://vast-rose-bluefish-coat.cyclic.app/customer/`,
+        `http://localhost:5000/api/v1/teacher`,
         data
       );
       getData();
@@ -25,18 +25,16 @@ const Teacher = () => {
 
   const getData = async () => {
     try {
-      const res = await axios.get(
-        `https://vast-rose-bluefish-coat.cyclic.app/customer`
-      );
-      setTeacher(res.data);
+      const res = await axios.get(`http://localhost:5000/api/v1/teachers`);
+      setTeacher(res.data.message);
     } catch (error) {
       console.log(error);
     }
   };
   const handleEdit = async (data) => {
     try {
-      const res = await axios.patch(
-        `https://vast-rose-bluefish-coat.cyclic.app/customer/${data._id}`,
+      const res = await axios.put(
+        `http://localhost:5000/api/v1/update/teacher/${data._id}`,
         data
       );
 
@@ -51,7 +49,7 @@ const Teacher = () => {
   const handleDeleteTeacher = async (detail) => {
     try {
       const res = await axios.delete(
-        `https://vast-rose-bluefish-coat.cyclic.app/customer/${detail._id}`
+        `http://localhost:5000/api/v1/delete/teacher/${detail._id}`
       );
       console.log(res, "sadsdasadasdasdasdasd");
 

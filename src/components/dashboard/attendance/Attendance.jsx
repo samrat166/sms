@@ -14,7 +14,7 @@ const Attendance = () => {
     console.log(data);
     try {
       const res = await axios.post(
-        `https://vast-rose-bluefish-coat.cyclic.app/customer/`,
+        `http://localhost:5000/api/v1/attendence`,
         data
       );
       getData();
@@ -25,10 +25,9 @@ const Attendance = () => {
 
   const getData = async () => {
     try {
-      const res = await axios.get(
-        `https://vast-rose-bluefish-coat.cyclic.app/customer`
-      );
-      setTeacher(res.data);
+      const res = await axios.get(`http://localhost:5000/api/v1/attendence`);
+      console.log(res, "asdasdasdasd");
+      // setTeacher(res.data);
     } catch (error) {
       console.log(error);
     }

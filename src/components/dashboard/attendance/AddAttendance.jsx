@@ -13,13 +13,13 @@ const AddAttendance = ({
   const [attendanceDetail, setAttendanceDetail] = useState({});
   const handleSaveChanges = () => {
     if (!attendanceDetail.name) return alert("Please Enter Student's Name");
-    if (!attendanceDetail.address)
-      return alert("Please Enter Student's Address");
-    if (!attendanceDetail.phoneNumber)
-      return alert("Please Enter Student's Phone Number");
 
     if (!attendanceDetail._id) {
-      handleCreateTeacher(attendanceDetail);
+      handleCreateTeacher({
+        className: attendanceDetail?.className,
+        attandenceData: [],
+        date: attendanceDetail?.date,
+      });
     } else {
       handleEdit(attendanceDetail);
     }
@@ -76,11 +76,23 @@ const AddAttendance = ({
                     onChange={(e) =>
                       setAttendanceDetail({
                         ...attendanceDetail,
-                        [field.name]: e.target.value,
+                        [field.name]: new Date(e.target.value),
                       })
                     }
                     className="form-control form-control-sm"
                   ></input>
+                )}
+                {field.type === "boolean" && (
+                  <Form.Check
+                    type={"checkbox"}
+                    label={``}
+                    onChange={(e) =>
+                      setAttendanceDetail({
+                        ...attendanceDetail,
+                        [field.name]: new Date(e.target.checked),
+                      })
+                    }
+                  />
                 )}
               </div>
             );

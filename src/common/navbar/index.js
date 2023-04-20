@@ -2,11 +2,16 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Logo from "../Logo";
 import { School } from "@mui/icons-material";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function Header() {
   const { pathname } = useLocation();
-  console.log(pathname);
+  const navigate = useNavigate();
+  const user = window.sessionStorage.getItem("user");
+  const onLogoutClick = () => {
+    window.sessionStorage.removeItem("user");
+    navigate(`/login`, { replace: true });
+  };
   return (
     <>
       <Navbar
@@ -33,10 +38,10 @@ function Header() {
           >
             <Nav.Link
               className="ms-2"
-              active={pathname === "/result"}
-              href={"/result"}
+              active={pathname === "/home"}
+              href={"/home"}
             >
-              Result
+              Home
             </Nav.Link>
             <Nav.Link
               className="ms-2"
@@ -45,20 +50,33 @@ function Header() {
             >
               Notice
             </Nav.Link>
-            <Nav.Link
-              className="ms-2"
-              active={pathname === "/dashboard"}
-              href={"/dashboard"}
-            >
-              Dashboard
-            </Nav.Link>{" "}
-            <Nav.Link
-              className="ms-2"
-              active={pathname === "/login"}
-              href={"/login"}
-            >
-              Login
-            </Nav.Link>
+            {user && (
+              <Nav.Link
+                className="ms-2"
+                active={pathname === "/dashboard"}
+                href={"/dashboard"}
+              >
+                Dashboard
+              </Nav.Link>
+            )}
+            {user && (
+              <Nav.Link
+                className="ms-2"
+                active={pathname === "/login"}
+                onClick={onLogoutClick}
+              >
+                Log Out
+              </Nav.Link>
+            )}{" "}
+            {!user && (
+              <Nav.Link
+                className="ms-2"
+                active={pathname === "/login"}
+                href={"/login"}
+              >
+                Login
+              </Nav.Link>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Navbar>

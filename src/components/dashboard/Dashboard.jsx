@@ -5,16 +5,23 @@ import {
   PlusOne,
   Portrait,
 } from "@mui/icons-material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import Student from "./student/Student";
 import Teacher from "./teacher/Teacher";
 import Notice from "./notice/Notice";
 import Attendance from "./attendance/Attendance";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [tab, setTab] = useState("add-student");
-
+  const navigate = useNavigate();
+  const user = window.sessionStorage.getItem("user");
+  useEffect(() => {
+    if (!user) {
+      navigate(`/login`, { replace: true });
+    }
+  }, []);
   return (
     <>
       <div className="d-flex">

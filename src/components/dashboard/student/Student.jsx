@@ -4,17 +4,18 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Dropdown, Table } from "react-bootstrap";
 import { studentsField } from "../../../common/constants";
 import AddStudent from "./AddStudent";
-
+const classList = ["One", "Two", "Three", "Four", "Five"];
 const Student = () => {
   const [students, setStudents] = useState([]);
   const [openAddStudentModal, setOpenAddStudentModal] = useState(null);
+  const [filteredClass, setFilteredClass] = useState();
 
   const handleCreateStudent = async (detail) => {
     const data = { ...detail };
-    console.log(data);
+    console.log(data, "kosassa");
     try {
       const res = await axios.post(
-        `https://vast-rose-bluefish-coat.cyclic.app/customer/`,
+        `http://localhost:5000/api/v1/student`,
         data
       );
       getData();
@@ -25,18 +26,18 @@ const Student = () => {
 
   const getData = async () => {
     try {
-      const res = await axios.get(
-        `https://vast-rose-bluefish-coat.cyclic.app/customer`
-      );
-      setStudents(res.data);
+      const res = await axios.get(`http://localhost:5000/api/v1/students`);
+      setStudents(res.data.message);
     } catch (error) {
       console.log(error);
     }
   };
   const handleEdit = async (data) => {
+    console.log(data, "kosassa");
+
     try {
-      const res = await axios.patch(
-        `https://vast-rose-bluefish-coat.cyclic.app/customer/${data._id}`,
+      const res = await axios.put(
+        `http://localhost:5000/api/v1/update/student/${data._id}`,
         data
       );
 
@@ -51,7 +52,7 @@ const Student = () => {
   const handleDeleteStudent = async (detail) => {
     try {
       const res = await axios.delete(
-        `https://vast-rose-bluefish-coat.cyclic.app/customer/${detail._id}`
+        `http://localhost:5000/api/v1/delete/student/${detail._id}`
       );
       console.log(res, "sadsdasadasdasdasdasd");
 
@@ -59,6 +60,10 @@ const Student = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+  const onClassFilter = (c) => {
+    console.log(c);
+    setStudents(students.filter((x) => x.class === c));
   };
 
   return (
@@ -75,15 +80,29 @@ const Student = () => {
             </h5>
           </div>
           <div className="ms-2">
-            <Dropdown>
+            <Dropdown
+              value={filteredClass}
+              onSelect={(e) => {
+                setFilteredClass(e);
+              }}
+            >
               <Dropdown.Toggle variant="outline-dark" id="dropdown-basic">
-                Select Class
+                {!filteredClass
+                  ? "Select Class"
+                  : `Class: ${filteredClass.toUpperCase()}`}
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item href="#/action-1">One</Dropdown.Item>
-                <Dropdown.Item href="#/action-1">Two</Dropdown.Item>
-                <Dropdown.Item href="#/action-1">Three</Dropdown.Item>
-                <Dropdown.Item href="#/action-1">Four</Dropdown.Item>
+                {classList.map((classI) => {
+                  return (
+                    <Dropdown.Item
+                      eventKey={classI}
+                      key={classI}
+                      onClick={() => onClassFilter(classI)}
+                    >
+                      {classI.toUpperCase()}
+                    </Dropdown.Item>
+                  );
+                })}
               </Dropdown.Menu>
             </Dropdown>
           </div>
