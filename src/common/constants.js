@@ -86,6 +86,28 @@ export const noticeField = [
     type: "text",
   },
 ];
+export const attendanceField = [
+  {
+    name: "class",
+    label: "Class",
+    type: "text",
+  },
+  {
+    name: "name",
+    label: "Name",
+    type: "text",
+  },
+  {
+    name: "date",
+    label: "Date",
+    type: "date",
+  },
+  {
+    name: "isPresent",
+    label: "Absent/Present",
+    type: "text",
+  },
+];
 
 export const teacherField = [
   {

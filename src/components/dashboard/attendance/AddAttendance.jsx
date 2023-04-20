@@ -1,8 +1,7 @@
 import { AccountCircleSharp, Face3 } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
-import { teacherField } from "../../../common/constants";
-import DeleteModal from "./DeleteModal";
+import { attendanceField } from "../../../common/constants";
 
 const AddAttendance = ({
   show,
@@ -12,10 +11,10 @@ const AddAttendance = ({
   handleEdit,
 }) => {
   const [attendanceDetail, setAttendanceDetail] = useState({});
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const handleSaveChanges = () => {
     if (!attendanceDetail.name) return alert("Please Enter Student's Name");
-    if (!attendanceDetail.address) return alert("Please Enter Student's Address");
+    if (!attendanceDetail.address)
+      return alert("Please Enter Student's Address");
     if (!attendanceDetail.phoneNumber)
       return alert("Please Enter Student's Phone Number");
 
@@ -27,10 +26,6 @@ const AddAttendance = ({
     handleClose();
   };
 
-  const handleStudentDelete = () => {
-    handleDeleteTeacher(attendanceDetail);
-    handleClose();
-  };
   useEffect(() => {
     setAttendanceDetail(show);
   }, [show]);
@@ -51,7 +46,7 @@ const AddAttendance = ({
       </Modal.Header>
       <Modal.Body className="py-1">
         <>
-          {teacherField.map((field, index) => {
+          {attendanceField.map((field, index) => {
             return (
               <div xs={field.xs} className={index !== 0 && "mt-2"}>
                 <h6 className="small mb-1 text-muted">{field.label}:</h6>
@@ -70,6 +65,22 @@ const AddAttendance = ({
                     }
                     className="form-control form-control-sm"
                   ></input>
+                )}{" "}
+                {field.type === "date" && (
+                  <input
+                    placeholder=""
+                    required=""
+                    rows="4"
+                    type="date"
+                    value={attendanceDetail?.[field.name]}
+                    onChange={(e) =>
+                      setAttendanceDetail({
+                        ...attendanceDetail,
+                        [field.name]: e.target.value,
+                      })
+                    }
+                    className="form-control form-control-sm"
+                  ></input>
                 )}
               </div>
             );
@@ -77,21 +88,10 @@ const AddAttendance = ({
         </>
       </Modal.Body>
       <Modal.Footer>
-        {show?._id && (
-          <Button variant="danger" onClick={() => setOpenDeleteModal(true)}>
-            Delete
-          </Button>
-        )}
         <Button variant="success" onClick={handleSaveChanges}>
           Save Changes
         </Button>
       </Modal.Footer>
-      <DeleteModal
-        openDeleteModal={openDeleteModal}
-        onHide={() => setOpenDeleteModal(false)}
-        onDelete={handleStudentDelete}
-        name={show?.name}
-      />
     </Modal>
   );
 };

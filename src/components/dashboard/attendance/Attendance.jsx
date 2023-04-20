@@ -2,7 +2,7 @@ import { AddCircleOutline, Person2Rounded } from "@mui/icons-material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Card, Dropdown, Table } from "react-bootstrap";
-import { teacherField } from "../../../common/constants";
+import { attendanceField } from "../../../common/constants";
 import AddTeacher from "./AddAttendance";
 
 const Attendance = () => {
@@ -71,7 +71,7 @@ const Attendance = () => {
               style={{ fontSize: 24, marginTop: 5 }}
               className="ms-1 me-1  mb-0"
             >
-              Total Teachers: {teachers?.length}
+              Total Students: {teachers?.length}
             </h5>
           </div>
         </div>
@@ -80,13 +80,13 @@ const Attendance = () => {
           className="my-1 mb-2"
           onClick={() => setOpenAddTeacherModal({})}
         >
-          <AddCircleOutline /> Add new Teacher
+          <AddCircleOutline /> Update Attandance
         </Button>
       </div>
       <Table striped bordered hover size="sm" className="mt-1">
         <thead>
           <tr>
-            {teacherField.map((field) => {
+            {attendanceField.map((field) => {
               return <td style={{ fontSize: 14 }}>{field.label}</td>;
             })}
           </tr>
@@ -98,7 +98,7 @@ const Attendance = () => {
                 className={"bg-light text-dark"}
                 onClick={() => setOpenAddTeacherModal({ ...teacher, index })}
               >
-                {teacherField.map((field) => {
+                {attendanceField.map((field) => {
                   return (
                     <td style={{ fontSize: 12 }}>{teacher?.[field.name]}</td>
                   );

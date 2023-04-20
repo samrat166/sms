@@ -10,6 +10,7 @@ import { Button } from "react-bootstrap";
 import Student from "./student/Student";
 import Teacher from "./teacher/Teacher";
 import Notice from "./notice/Notice";
+import Attendance from "./attendance/Attendance";
 
 const Dashboard = () => {
   const [tab, setTab] = useState("add-student");
@@ -56,6 +57,7 @@ const Dashboard = () => {
           {tab === "add-student" && <Student />}
           {tab === "add-teacher" && <Teacher />}
           {tab === "notice" && <Notice />}
+          {tab === "attendance" && <Attendance />}
         </div>
       </div>
     </>

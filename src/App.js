@@ -8,6 +8,7 @@ import Home from "./components/Home";
 import CustomerRegister from "./components/register/CustomerRegister";
 import Notice from "./components/notice/Notice";
 import Dashboard from "./components/dashboard/Dashboard";
+import Login from "./components/Login";
 
 function App() {
   const [value, setValue] = useState(0);
@@ -18,6 +19,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="notice" element={<Notice />} />
+          <Route path="login" element={<Login />} />
           <Route path="dashboard" element={<Dashboard />} />
         </Routes>
       </div>
