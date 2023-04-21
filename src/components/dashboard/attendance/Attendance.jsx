@@ -2,14 +2,17 @@ import { AddCircleOutline, Person2Rounded } from "@mui/icons-material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Card, Dropdown, Table } from "react-bootstrap";
-import { attendanceField } from "../../../common/constants";
+import { allClasses, attendanceField } from "../../../common/constants";
 import AddTeacher from "./AddAttendance";
 
-const Attendance = () => {
-  const [teachers, setTeacher] = useState([]);
-  const [openAddTeacherModal, setOpenAddTeacherModal] = useState(null);
+const att = [];
 
-  const handleCreateTeacher = async (detail) => {
+const Attendance = () => {
+  const [attendance, setAttendance] = useState([]);
+
+  const [openAddModal, setOpenAddModal] = useState(null);
+
+  const handleCreateAttendance = async (detail) => {
     const data = { ...detail };
     console.log(data);
     try {
@@ -23,11 +26,20 @@ const Attendance = () => {
     }
   };
 
+  // const getStudent = async () => {
+  //   try {
+  //     const res = await axios.get(`http://localhost:5000/api/v1/students`);
+  //     setStudents(res.data.message);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   const getData = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/v1/attendence`);
+      const res = await axios.get(`http://localhost:5000/api/v1/attendences`);
       console.log(res, "asdasdasdasd");
-      // setTeacher(res.data);
+      // setAttendance(res.data);
     } catch (error) {
       console.log(error);
     }
@@ -47,14 +59,14 @@ const Attendance = () => {
   useEffect(() => {
     getData();
   }, []);
-  const handleDeleteTeacher = async (detail) => {
+  const handleDeleteAttendance = async (detail) => {
     try {
       const res = await axios.delete(
         `https://vast-rose-bluefish-coat.cyclic.app/customer/${detail._id}`
       );
       console.log(res, "sadsdasadasdasdasdasd");
 
-      setTeacher(teachers.filter((x) => x._id !== detail._id));
+      setAttendance(attendance.filter((x) => x._id !== detail._id));
     } catch (error) {
       console.log(error);
     }
@@ -70,48 +82,62 @@ const Attendance = () => {
               style={{ fontSize: 24, marginTop: 5 }}
               className="ms-1 me-1  mb-0"
             >
-              Total Students: {teachers?.length}
+              Total Students: {attendance?.length}
             </h5>
           </div>
         </div>
         <Button
           variant="dark"
           className="my-1 mb-2"
-          onClick={() => setOpenAddTeacherModal({})}
+          onClick={() => setOpenAddModal({})}
         >
           <AddCircleOutline /> Update Attandance
         </Button>
       </div>
-      <Table striped bordered hover size="sm" className="mt-1">
-        <thead>
-          <tr>
-            {attendanceField.map((field) => {
-              return <td style={{ fontSize: 14 }}>{field.label}</td>;
-            })}
-          </tr>
-        </thead>
-        <tbody>
-          {teachers?.map((teacher, index) => {
-            return (
-              <tr
-                className={"bg-light text-dark"}
-                onClick={() => setOpenAddTeacherModal({ ...teacher, index })}
-              >
-                {attendanceField.map((field) => {
+
+      {allClasses?.map((x) => {
+        return (
+          <div>
+            <h6 className="xlarge p-1 bg-secondary text-light text-center my-2 rounded">
+              Class {x}
+            </h6>
+            <Table striped bordered hover size="sm" className="mt-1">
+              <thead>
+                <tr>
+                  {attendanceField.map((field) => {
+                    return <td style={{ fontSize: 14 }}>{field.label}</td>;
+                  })}
+                </tr>
+              </thead>
+              <tbody>
+                {attendance?.map((teacher, index) => {
                   return (
-                    <td style={{ fontSize: 12 }}>{teacher?.[field.name]}</td>
+                    <tr
+                      className={"bg-light text-dark"}
+                      onClick={() =>
+                        setOpenAddModal({ ...teacher, index })
+                      }
+                    >
+                      {attendanceField.map((field) => {
+                        return (
+                          <td style={{ fontSize: 12 }}>
+                            {teacher?.[field.name]}
+                          </td>
+                        );
+                      })}
+                    </tr>
                   );
                 })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
+              </tbody>
+            </Table>
+          </div>
+        );
+      })}
       <AddTeacher
-        show={openAddTeacherModal}
-        handleClose={() => setOpenAddTeacherModal(null)}
-        handleCreateTeacher={handleCreateTeacher}
-        handleDeleteTeacher={handleDeleteTeacher}
+        show={openAddModal}
+        handleClose={() => setOpenAddModal(null)}
+        handleCreateAttendance={handleCreateAttendance}
+        handleDeleteAttendance={handleDeleteAttendance}
         handleEdit={handleEdit}
       />
     </Card>

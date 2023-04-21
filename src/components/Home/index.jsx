@@ -4,10 +4,13 @@ import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
-    <div className="d-flex justify-content-center">
-      <div className="d-flex" style={{ marginTop: "40vh" }}>
-        <h2 className="xxxlarge">Hello!</h2>
-      </div>
+    <div className="d-flex mt-5 flex-column align-items-center justify-content-center">
+      <h2 className="xxxlarge">Welcome to School management system!</h2>
+
+      <h6>
+        Developed and Designed by: Anil Chaudary, Aashma Chand Thakuri and
+        Ambika Chaudary
+      </h6>
     </div>
   );
 };
