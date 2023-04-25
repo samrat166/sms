@@ -1,76 +1,95 @@
-import { AddCircleOutline, Person2Rounded } from "@mui/icons-material";
+import { Person2Rounded } from "@mui/icons-material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Card, Dropdown, Table } from "react-bootstrap";
-import { allClasses, attendanceField } from "../../../common/constants";
-import AddTeacher from "./AddAttendance";
-
-const att = [];
+import { Card, Form, Table } from "react-bootstrap";
+import {
+  addOrUpdateItemInArray,
+  attendanceField,
+} from "../../../common/constants";
 
 const Attendance = () => {
   const [attendance, setAttendance] = useState([]);
+  const [date, setDate] = useState();
+  const [studentsBasedOnDate, setStudentsBasedOnDates] = useState();
+  const [students, setStudents] = useState();
+  const [overallStudentsByClass, setOverallStudentByClass] = useState();
 
-  const [openAddModal, setOpenAddModal] = useState(null);
+  const onDateChanges = (e) => {
+    setDate(e);
+    const result = attendance?.filter((x) => x.date === e);
+    setStudentsBasedOnDates(result[0]?.absentOrPresent);
+  };
 
-  const handleCreateAttendance = async (detail) => {
-    const data = { ...detail };
-    console.log(data);
+  const onAttandanceClick = async (
+    individualStudent,
+    studentIfExists,
+    value
+  ) => {
+    const allStudentOnSpecificDate = studentsBasedOnDate ?? [];
+    const updatedStudents = addOrUpdateItemInArray(
+      allStudentOnSpecificDate,
+      studentIfExists
+        ? { ...studentIfExists, isPresent: value }
+        : {
+            name: individualStudent?.name,
+            class: individualStudent?.class,
+            isPresent: value,
+          }
+    );
     try {
-      const res = await axios.post(
-        `http://localhost:5000/api/v1/attendence`,
-        data
-      );
-      getData();
+      const res = await axios.post(`http://localhost:5000/api/v1/attendences`, {
+        date,
+        absentOrPresent: updatedStudents,
+      });
+      if (res.data.success) {
+        getAttendance();
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
-  // const getStudent = async () => {
-  //   try {
-  //     const res = await axios.get(`http://localhost:5000/api/v1/students`);
-  //     setStudents(res.data.message);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  function groupStudentsByClass(std) {
+    const classes = new Set(std?.map((student) => student.class)); // get a list of unique classes
+    const result = [];
 
-  const getData = async () => {
+    for (const classNumber of classes) {
+      const studentsInClass = std?.filter(
+        (student) => student.class === classNumber
+      );
+      result.push(studentsInClass); // add filtered students to the result array
+    }
+    return result;
+  }
+
+  const getStudent = async () => {
+    try {
+      const res = await axios.get(`http://localhost:5000/api/v1/students`);
+      setStudents(res.data.message);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getAttendance = async () => {
     try {
       const res = await axios.get(`http://localhost:5000/api/v1/attendences`);
-      console.log(res, "asdasdasdasd");
-      // setAttendance(res.data);
+      setAttendance(res.data.message);
     } catch (error) {
       console.log(error);
     }
   };
-  const handleEdit = async (data) => {
-    try {
-      const res = await axios.patch(
-        `https://vast-rose-bluefish-coat.cyclic.app/customer/${data._id}`,
-        data
-      );
 
-      if (res.data) getData();
-    } catch (error) {
-      console.log(error);
-    }
-  };
   useEffect(() => {
-    getData();
+    getAttendance();
+    getStudent();
   }, []);
-  const handleDeleteAttendance = async (detail) => {
-    try {
-      const res = await axios.delete(
-        `https://vast-rose-bluefish-coat.cyclic.app/customer/${detail._id}`
-      );
-      console.log(res, "sadsdasadasdasdasdasd");
 
-      setAttendance(attendance.filter((x) => x._id !== detail._id));
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  useEffect(() => {
+    setOverallStudentByClass(groupStudentsByClass(students));
+    const result = attendance?.filter((x) => x.date === date);
+    setStudentsBasedOnDates(result[0]?.absentOrPresent);
+  }, [students, attendance]);
 
   return (
     <Card className="mx-1 px-1 py-2 ">
@@ -82,64 +101,74 @@ const Attendance = () => {
               style={{ fontSize: 24, marginTop: 5 }}
               className="ms-1 me-1  mb-0"
             >
-              Total Students: {attendance?.length}
+              Attendance
             </h5>
           </div>
         </div>
-        <Button
-          variant="dark"
-          className="my-1 mb-2"
-          onClick={() => setOpenAddModal({})}
-        >
-          <AddCircleOutline /> Update Attandance
-        </Button>
       </div>
-
-      {allClasses?.map((x) => {
-        return (
-          <div>
-            <h6 className="xlarge p-1 bg-secondary text-light text-center my-2 rounded">
-              Class {x}
-            </h6>
-            <Table striped bordered hover size="sm" className="mt-1">
-              <thead>
-                <tr>
-                  {attendanceField.map((field) => {
-                    return <td style={{ fontSize: 14 }}>{field.label}</td>;
-                  })}
-                </tr>
-              </thead>
-              <tbody>
-                {attendance?.map((teacher, index) => {
-                  return (
-                    <tr
-                      className={"bg-light text-dark"}
-                      onClick={() =>
-                        setOpenAddModal({ ...teacher, index })
-                      }
-                    >
+      <input
+        type="date"
+        className="w-25"
+        value={date}
+        onChange={(e) => onDateChanges(e.target.value)}
+      />
+      {date ? (
+        <>
+          {overallStudentsByClass?.map((students) => {
+            return (
+              <div>
+                <h6 className="large p-1 bg-secondary w-25 text-light text-center my-2 rounded">
+                  Class {students?.[0]?.class}
+                </h6>
+                <Table striped bordered hover size="sm" className="mt-1">
+                  <thead>
+                    <tr>
                       {attendanceField.map((field) => {
-                        return (
-                          <td style={{ fontSize: 12 }}>
-                            {teacher?.[field.name]}
-                          </td>
-                        );
+                        return <td style={{ fontSize: 14 }}>{field.label}</td>;
                       })}
                     </tr>
-                  );
-                })}
-              </tbody>
-            </Table>
-          </div>
-        );
-      })}
-      <AddTeacher
-        show={openAddModal}
-        handleClose={() => setOpenAddModal(null)}
-        handleCreateAttendance={handleCreateAttendance}
-        handleDeleteAttendance={handleDeleteAttendance}
-        handleEdit={handleEdit}
-      />
+                  </thead>
+                  <tbody>
+                    {students?.map((student, index) => {
+                      return (
+                        <tr className={"bg-light text-dark"}>
+                          <td style={{ fontSize: 12 }}>{student?.name}</td>
+                          <td style={{ fontSize: 12 }}>
+                            <Form.Check
+                              type={"checkbox"}
+                              label={`Present`}
+                              checked={
+                                studentsBasedOnDate?.find(
+                                  (x) => x.name === student?.name
+                                )?.isPresent
+                                  ? true
+                                  : false
+                              }
+                              onClick={(e) =>
+                                onAttandanceClick(
+                                  student,
+                                  studentsBasedOnDate?.find(
+                                    (x) => x.name === student?.name
+                                  ),
+                                  e.target.checked
+                                )
+                              }
+                            />
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </Table>
+              </div>
+            );
+          })}
+        </>
+      ) : (
+        <h6 className="mt-2 d-flex justify-content-center bg-muted p-3 rounded">
+          Please Choose a Date!
+        </h6>
+      )}
     </Card>
   );
 };

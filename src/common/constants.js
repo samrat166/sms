@@ -80,7 +80,8 @@ export const studentsField = [
   {
     name: "class",
     label: "Class",
-    type: "text",
+    type: "enum",
+    options: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
   },
 
   {
@@ -104,20 +105,11 @@ export const noticeField = [
 ];
 export const attendanceField = [
   {
-    name: "class",
-    label: "Class",
-    type: "text",
-  },
-  {
-    name: "studentName",
+    name: "name",
     label: "Student Name",
     type: "text",
   },
-  {
-    name: "date",
-    label: "Date",
-    type: "date",
-  },
+
   {
     name: "isPresent",
     label: "Absent/Present",

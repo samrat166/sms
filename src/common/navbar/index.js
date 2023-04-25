@@ -7,11 +7,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 function Header() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const user = window.sessionStorage.getItem("user");
+  const user = JSON.parse(window.sessionStorage.getItem("user"));
   const onLogoutClick = () => {
     window.sessionStorage.removeItem("user");
     navigate(`/login`, { replace: true });
   };
+  console.log(user);
   return (
     <>
       <Navbar
@@ -50,7 +51,16 @@ function Header() {
             >
               Notice
             </Nav.Link>
-            {user && (
+            {user?.role === "Student" && (
+              <Nav.Link
+                className="ms-2"
+                active={pathname === "/my-attendance"}
+                href={"/my-attendance"}
+              >
+                Your Attendance
+              </Nav.Link>
+            )}
+            {user?.role === "Admin" && (
               <Nav.Link
                 className="ms-2"
                 active={pathname === "/dashboard"}

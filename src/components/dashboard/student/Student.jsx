@@ -1,14 +1,33 @@
 import { AddCircleOutline, Person2Rounded } from "@mui/icons-material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Card, Dropdown, Table } from "react-bootstrap";
+import { Button, Card, Dropdown, Form, Table } from "react-bootstrap";
 import { studentsField } from "../../../common/constants";
 import AddStudent from "./AddStudent";
-const classList = ["One", "Two", "Three", "Four", "Five"];
+const classList = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "All"];
 const Student = () => {
   const [students, setStudents] = useState([]);
   const [openAddStudentModal, setOpenAddStudentModal] = useState(null);
   const [filteredClass, setFilteredClass] = useState();
+  const [searchQuery, setSearchQUery] = useState("");
+  const [filterByClass, setFilterByClass] = useState("All");
+  const [filteredList, setFilteredList] = useState();
+
+  const filterRule = (student) => {
+    return (
+      student.class.toLowerCase().includes(filterByClass.toLowerCase()) &&
+      student.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
+  useEffect(() => {
+    console.log(filterByClass);
+    const filteredValue =
+      searchQuery || filterByClass !== "All"
+        ? students?.filter((student) => filterRule(student))
+        : [...students];
+    setFilteredList(filteredValue);
+  }, [searchQuery, filterByClass]);
 
   const handleCreateStudent = async (detail) => {
     const data = { ...detail };
@@ -28,6 +47,7 @@ const Student = () => {
     try {
       const res = await axios.get(`http://localhost:5000/api/v1/students`);
       setStudents(res.data.message);
+      setFilteredList(res.data.message);
     } catch (error) {
       console.log(error);
     }
@@ -61,10 +81,6 @@ const Student = () => {
       console.log(error);
     }
   };
-  const onClassFilter = (c) => {
-    console.log(c);
-    setStudents(students.filter((x) => x.class === c));
-  };
 
   return (
     <Card className="mx-1 px-1 py-2 ">
@@ -97,7 +113,7 @@ const Student = () => {
                     <Dropdown.Item
                       eventKey={classI}
                       key={classI}
-                      onClick={() => onClassFilter(classI)}
+                      onClick={() => setFilterByClass(classI)}
                     >
                       {classI.toUpperCase()}
                     </Dropdown.Item>
@@ -106,6 +122,13 @@ const Student = () => {
               </Dropdown.Menu>
             </Dropdown>
           </div>
+          <Form className="ms-3">
+            <Form.Control
+              placeholder="Search Students here..."
+              value={searchQuery}
+              onChange={(e) => setSearchQUery(e.target.value)}
+            ></Form.Control>
+          </Form>
         </div>
         <Button
           variant="dark"
@@ -124,7 +147,7 @@ const Student = () => {
           </tr>
         </thead>
         <tbody>
-          {students?.map((student, index) => {
+          {filteredList?.map((student, index) => {
             return (
               <tr
                 className={"bg-light text-dark"}

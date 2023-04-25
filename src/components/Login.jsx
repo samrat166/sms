@@ -18,8 +18,8 @@ const Login = () => {
         window.sessionStorage.setItem(
           "user",
           JSON.stringify({
-            email: res.data.message.email,
             role: res.data.message.role,
+            id: res.data.message.studentId ?? "1",
           })
         );
         navigate(`/dashboard`, { replace: true });
@@ -52,7 +52,7 @@ const Login = () => {
                 rows="4"
                 type="text"
                 onChange={(e) => {
-                  setUserDetails({ ...userDetails, email: e.target.value });
+                  setUserDetails({ ...userDetails, username: e.target.value });
                 }}
                 className="form-control form-control w-100"
               ></input>{" "}

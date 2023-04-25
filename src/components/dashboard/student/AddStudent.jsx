@@ -1,6 +1,6 @@
 import { AccountCircleSharp, Face3 } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
-import { Button, Col, Form, Modal, Row } from "react-bootstrap";
+import { Button, Col, Dropdown, Form, Modal, Row } from "react-bootstrap";
 import { studentsField } from "../../../common/constants";
 import DeleteModal from "./DeleteModal";
 
@@ -13,6 +13,7 @@ const AddStudent = ({
 }) => {
   const [studentDetail, setStudentDetails] = useState({});
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
   const handleSaveChanges = () => {
     if (!studentDetail.name) return alert("Please Enter Student's Name");
     if (!studentDetail.address) return alert("Please Enter Student's Address");
@@ -34,6 +35,7 @@ const AddStudent = ({
     handleDeleteStudent(studentDetail);
     handleClose();
   };
+
   useEffect(() => {
     setStudentDetails(show);
   }, [show]);
@@ -73,6 +75,41 @@ const AddStudent = ({
                     }
                     className="form-control form-control-sm"
                   ></input>
+                )}
+                {field.type === "enum" && (
+                  <Dropdown
+                    value={studentDetail?.[field.name]}
+                    onChange={(e) =>
+                      setStudentDetails({
+                        ...studentDetail,
+                        [field.name]: e.target.value,
+                      })
+                    }
+                  >
+                    <Dropdown.Toggle variant="outline-dark" id="dropdown-basic">
+                      {!studentDetail?.[field.name]
+                        ? "Select Class"
+                        : `Class: ${field.name.toUpperCase()}`}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      {field.options.map((classI) => {
+                        return (
+                          <Dropdown.Item
+                            eventKey={classI}
+                            key={classI}
+                            onClick={(e) =>
+                              setStudentDetails({
+                                ...studentDetail,
+                                [field.name]: classI  ,
+                              })
+                            }
+                          >
+                            {classI.toUpperCase()}
+                          </Dropdown.Item>
+                        );
+                      })}
+                    </Dropdown.Menu>
+                  </Dropdown>
                 )}
               </div>
             );
