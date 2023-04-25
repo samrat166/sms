@@ -129,7 +129,7 @@ export const teacherField = [
     type: "text",
   },
   {
-    name: "phoneNumber",
+    name: "phone",
     label: "Phone Number",
     type: "text",
   },

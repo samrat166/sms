@@ -16,7 +16,7 @@ const AddStudent = ({
   const handleSaveChanges = () => {
     if (!teacherDetail.name) return alert("Please Enter Student's Name");
     if (!teacherDetail.address) return alert("Please Enter Student's Address");
-    if (!teacherDetail.phoneNumber)
+    if (!teacherDetail.phone)
       return alert("Please Enter Student's Phone Number");
 
     if (!teacherDetail._id) {

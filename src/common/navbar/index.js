@@ -60,7 +60,7 @@ function Header() {
                 Your Attendance
               </Nav.Link>
             )}
-            {user?.role === "Admin" && (
+            {(user?.role === "Teacher" || user?.role === "Admin") && (
               <Nav.Link
                 className="ms-2"
                 active={pathname === "/dashboard"}
