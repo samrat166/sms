@@ -32,6 +32,7 @@ const Attendance = () => {
         ? { ...studentIfExists, isPresent: value }
         : {
             name: individualStudent?.name,
+            studentId: individualStudent?._id,
             class: individualStudent?.class,
             isPresent: value,
           }

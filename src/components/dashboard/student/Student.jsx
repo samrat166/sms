@@ -21,11 +21,18 @@ const Student = () => {
   };
 
   useEffect(() => {
-    console.log(filterByClass);
-    const filteredValue =
-      searchQuery || filterByClass !== "All"
-        ? students?.filter((student) => filterRule(student))
+    const filteredValueByQuery =
+      searchQuery !== ""
+        ? students?.filter((student) =>
+            student.name.toLowerCase().includes(searchQuery.toLowerCase())
+          )
         : [...students];
+    const filteredValue =
+      filterByClass !== "All" && filterByClass
+        ? filteredValueByQuery?.filter((student) =>
+            student.class.toLowerCase().includes(filterByClass.toLowerCase())
+          )
+        : [...filteredValueByQuery];
     setFilteredList(filteredValue);
   }, [searchQuery, filterByClass]);
 
@@ -70,13 +77,14 @@ const Student = () => {
     getData();
   }, []);
   const handleDeleteStudent = async (detail) => {
+    console.log(detail);
     try {
       const res = await axios.delete(
         `http://localhost:5000/api/v1/delete/student/${detail._id}`
       );
-      console.log(res, "sadsdasadasdasdasdasd");
 
       setStudents(students.filter((x) => x._id !== detail._id));
+      setFilteredList(filteredList.filter((x) => x._id !== detail._id));
     } catch (error) {
       console.log(error);
     }

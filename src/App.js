@@ -7,6 +7,7 @@ import Home from "./components/Home";
 import Notice from "./components/notice/Notice";
 import Dashboard from "./components/dashboard/Dashboard";
 import Login from "./components/Login";
+import MyAttendance from "./components/my-attendance/MyAttendance";
 
 function App() {
   const [value, setValue] = useState(0);
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
           <Route path="notice" element={<Notice />} />
+          <Route path="my-attendance" element={<MyAttendance />} />
           <Route path="login" element={<Login />} />
           <Route path="dashboard" element={<Dashboard />} />
         </Routes>

@@ -12,7 +12,7 @@ const AddStudent = ({
   handleDeleteStudent,
 }) => {
   const [studentDetail, setStudentDetails] = useState({});
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(null);
 
   const handleSaveChanges = () => {
     if (!studentDetail.name) return alert("Please Enter Student's Name");
@@ -38,6 +38,7 @@ const AddStudent = ({
 
   useEffect(() => {
     setStudentDetails(show);
+    setOpenDeleteModal(null);
   }, [show]);
 
   return (
@@ -100,7 +101,7 @@ const AddStudent = ({
                             onClick={(e) =>
                               setStudentDetails({
                                 ...studentDetail,
-                                [field.name]: classI  ,
+                                [field.name]: classI,
                               })
                             }
                           >
@@ -118,7 +119,7 @@ const AddStudent = ({
       </Modal.Body>
       <Modal.Footer>
         {show?._id && (
-          <Button variant="danger" onClick={() => setOpenDeleteModal(true)}>
+          <Button variant="danger" onClick={() => setOpenDeleteModal(show)}>
             Delete
           </Button>
         )}
